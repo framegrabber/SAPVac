@@ -21,7 +21,7 @@ async function createShapesFromClipboard() {
 
         // Erstellen der Shapes für jeden Urlaubseintrag
         for (const vacation of vacationData) {
-            const shapeWidth = baseWidth * vacation.vacationDuration;
+            const shapeWidth = baseWidth * vacation.vacationDuration + (vacation.vacationDuration-1) * 2;
             const shape = await miro.board.createShape({
                 content: `<p><b>${vacation.employeeName}</b><br />${vacation.vacationPeriod}</p>`,
                 shape: 'rectangle',
