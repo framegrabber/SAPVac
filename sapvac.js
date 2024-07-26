@@ -50,48 +50,58 @@
         }
       };
   
-      const calculateVacationDuration = (startDate, endDate) => {
-        const start = dayjs(startDate, 'D. MMMM YYYY', 'de');
-        const end = dayjs(endDate, 'D. MMMM YYYY', 'de');
-  
+      const calculateVacationDuration = (start, end) => {
         if (!start.isValid() || !end.isValid()) {
-          console.warn('Ungültiges Datum:', startDate, endDate);
+          console.warn('Ungültiges Datum:', start, end);
           return 0;
         }
-  
+      
         let workdays = 0;
         let current = start;
-  
+      
         while (current.isSameOrBefore(end)) {
           if (current.isoWeekday() <= 5) { // 1 (Montag) bis 5 (Freitag) sind Werktage
             workdays++;
           }
           current = current.add(1, 'day');
         }
-  
+      
         return workdays;
       };
 
-        const extractVacationFromEntry = (employeeName, vacationEntry) => {
-          const vacationTitleElement = vacationEntry.querySelector('.sapUiCalendarAppTitle');
-          const vacationDateElement = vacationEntry.querySelector('.sapUiCalendarAppText');
-    
-          if (vacationTitleElement && vacationDateElement) {
-            const vacationTitle = vacationTitleElement.textContent.trim().toLowerCase();
-            if (!vacationTitle.includes('feiertag')) {
-              const vacationPeriod = vacationDateElement.textContent.trim();
-              const [vacationStart, vacationEnd = vacationStart] = vacationPeriod.split('–').map(d => d.trim());
-              const vacationDuration = calculateVacationDuration(vacationStart, vacationEnd);
-    
-              return {
-                employeeName,
-                vacationPeriod,
-                vacationDuration
-              };
+      const extractVacationFromEntry = (employeeName, vacationEntry) => {
+        const vacationTitleElement = vacationEntry.querySelector('.sapUiCalendarAppTitle');
+        const vacationDateElement = vacationEntry.querySelector('.sapUiCalendarAppText');
+      
+        if (vacationTitleElement && vacationDateElement) {
+          const vacationTitle = vacationTitleElement.textContent.trim().toLowerCase();
+          if (!vacationTitle.includes('feiertag')) {
+            const vacationPeriod = vacationDateElement.textContent.trim();
+            const [vacationStart, vacationEnd = vacationStart] = vacationPeriod.split('–').map(d => d.trim());
+      
+            // Parse the dates
+            const startDate = dayjs(vacationStart, 'D. MMMM YYYY', 'de');
+            const endDate = dayjs(vacationEnd, 'D. MMMM YYYY', 'de');
+      
+            if (!startDate.isValid() || !endDate.isValid()) {
+              console.warn('Ungültiges Datum:', vacationStart, vacationEnd);
+              return null;
             }
+      
+            const vacationDuration = calculateVacationDuration(startDate, endDate);
+      
+            return {
+              employeeName,
+              vacationPeriod,
+              vacationStartDate: startDate.format('YYYY-MM-DD'),
+              vacationEndDate: endDate.format('YYYY-MM-DD'),
+              vacationDuration
+            };
           }
-          return null;
-        };
+        }
+        return null;
+      };
+      
     
         const extractVacationsFromCurrentView = () => {
           const employeeRows = document.querySelectorAll('.sapMListTblRow');
