@@ -65,6 +65,8 @@ async function createShapesFromClipboard() {
             employeeColors[employee] = generatePastelColor(index, totalEmployees);
         });
 
+        let createdShapes = []; // Array to store all created shapes
+
         for (const vacation of vacationData) {
             const vacationStart = new Date(vacation.vacationStartDate);
 
@@ -85,7 +87,7 @@ async function createShapesFromClipboard() {
 
             occupiedSlots.push({x, y, width, height: baseHeight});
 
-            await miro.board.createShape({
+            const shape = await miro.board.createShape({
                 content: `<p><b>${vacation.employeeName}</b><br />${vacation.vacationPeriod}</p>`,
                 shape: 'rectangle',
                 x: x + width / 2,
@@ -99,9 +101,14 @@ async function createShapesFromClipboard() {
                     borderWidth: 0,
                 },
             });
+
+            createdShapes.push(shape); // Add the created shape to our array
         }
 
         console.log('Shapes erfolgreich erstellt');
+        
+        await miro.board.group({ items: createdShapes })
+        console.log('Shapes erfolgreich gruppiert');
     } catch (error) {
         console.error('Fehler beim Erstellen der Shapes:', error);
     }
