@@ -39,8 +39,31 @@ async function createShapesFromClipboard() {
             return count;
         }
 
+        function generatePastelColor(index, totalColors) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+        
+            const hue = (index / totalColors) * 360;
+            const saturation = 70 + Math.random() * 10; // 70-80%
+            const lightness = 80 + Math.random() * 10;  // 80-90%
+        
+            ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+            ctx.fillRect(0, 0, 1, 1);
+        
+            const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+        
+            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        }
+
         const startDate = new Date(vacationData[0].vacationStartDate);
         let occupiedSlots = [];
+        let employeeColors = {};
+        let employees = [...new Set(vacationData.map(v => v.employeeName))];
+        let totalEmployees = employees.length;
+
+        employees.forEach((employee, index) => {
+            employeeColors[employee] = generatePastelColor(index, totalEmployees);
+        });
 
         for (const vacation of vacationData) {
             const vacationStart = new Date(vacation.vacationStartDate);
@@ -48,7 +71,6 @@ async function createShapesFromClipboard() {
             const daysFromStart = getWorkdays(startDate, getNextWorkday(vacationStart));
             let x = startX + daysFromStart * (baseWidth + padding) + padding;
 
-            // Verwenden der vacationDuration aus den Eingabedaten
             const width = vacation.vacationDuration * baseWidth + (vacation.vacationDuration - 1) * padding;
 
             let y = startY;
@@ -71,7 +93,7 @@ async function createShapesFromClipboard() {
                 width: width,
                 height: baseHeight,
                 style: {
-                    fillColor: '#FF469B',
+                    fillColor: employeeColors[vacation.employeeName],
                     fontFamily: 'open_sans',
                     fontSize: 10,
                     borderWidth: 0,
