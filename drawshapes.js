@@ -11,7 +11,7 @@ async function createShapesFromClipboard() {
         vacationData.sort((a, b) => new Date(a.vacationStartDate) - new Date(b.vacationStartDate));
 
         const baseWidth = 100;
-        const baseHeight = 100;
+        const baseHeight = 70;
         const padding = 2;
 
         const viewport = await miro.board.viewport.get();
