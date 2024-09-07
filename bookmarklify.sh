@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 
 # Überprüfen, ob ein Dateiname als Parameter übergeben wurde
 if [ $# -eq 0 ]; then
