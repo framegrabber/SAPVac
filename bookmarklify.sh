@@ -29,7 +29,7 @@ minified_code=$(cat "$temp_file")
 bookmarklet="javascript:(function(){$minified_code})();"
 
 # Bookmarklet in die Zwischenablage kopieren
-echo "$bookmarklet" | pbcopy
+echo "$bookmarklet"
 
 # Aufräumen
 rm "$temp_file"
