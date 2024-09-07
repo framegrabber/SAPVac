@@ -27,7 +27,7 @@ jobs:
       run: |
         mkdir -p output
         echo "{}" > output/bookmarks.json
-        for file in bookmarklets/*.js; do
+        for file in *.js; do
           name=$(basename "$file" .js)
           bookmarklet=$(./bookmarklify.sh "$file")
           jq --arg name "$name" --arg bookmarklet "$bookmarklet" '.[$name] = $bookmarklet' output/bookmarks.json > temp.json && mv temp.json output/bookmarks.json
