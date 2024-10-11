@@ -31,7 +31,7 @@ async function createShapesFromClipboard() {
             let end = new Date(endDate);
             let count = 0;
             const curDate = new Date(start);
-            while (curDate <= end) {
+            while (curDate < end) { // change from <= to <
                 const dayOfWeek = curDate.getDay();
                 if (dayOfWeek !== 0 && dayOfWeek !== 6) count++;
                 curDate.setDate(curDate.getDate() + 1);
@@ -42,16 +42,16 @@ async function createShapesFromClipboard() {
         function generatePastelColor(index, totalColors) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-        
+
             const hue = (index / totalColors) * 360;
             const saturation = 70 + Math.random() * 10; // 70-80%
             const lightness = 80 + Math.random() * 10;  // 80-90%
-        
+
             ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
             ctx.fillRect(0, 0, 1, 1);
-        
+
             const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-        
+
             return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
         }
 
@@ -71,7 +71,7 @@ async function createShapesFromClipboard() {
             const vacationStart = new Date(vacation.vacationStartDate);
 
             const daysFromStart = getWorkdays(startDate, getNextWorkday(vacationStart));
-            let x = startX + daysFromStart * (baseWidth + padding) + padding;
+            let x = startX + daysFromStart * (baseWidth + padding); // remove extra padding
 
             const width = vacation.vacationDuration * baseWidth + (vacation.vacationDuration - 1) * padding;
 
@@ -106,8 +106,8 @@ async function createShapesFromClipboard() {
         }
 
         console.log('Shapes erfolgreich erstellt');
-        
-        await miro.board.group({ items: createdShapes })
+
+        await miro.board.group({ items: createdShapes });
         console.log('Shapes erfolgreich gruppiert');
     } catch (error) {
         console.error('Fehler beim Erstellen der Shapes:', error);
