@@ -39,19 +39,24 @@ async function createShapesFromClipboard() {
             return count;
         }
 
-        function generatePastelColor(index, totalColors) {
+        function stringToColor(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+        
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-
-            const hue = (index / totalColors) * 360;
-            const saturation = 70 + Math.random() * 10; // 70-80%
-            const lightness = 80 + Math.random() * 10;  // 80-90%
-
+        
+            const hue = hash % 360;
+            const saturation = 70 + (hash % 10); // 70-80%
+            const lightness = 80 + ((hash >> 8) % 10);  // 80-90%
+        
             ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
             ctx.fillRect(0, 0, 1, 1);
-
+        
             const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-
+        
             return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
         }
 
@@ -59,10 +64,9 @@ async function createShapesFromClipboard() {
         let occupiedSlots = [];
         let employeeColors = {};
         let employees = [...new Set(vacationData.map(v => v.employeeName))];
-        let totalEmployees = employees.length;
 
         employees.forEach((employee, index) => {
-            employeeColors[employee] = generatePastelColor(index, totalEmployees);
+            employeeColors[employee] = stringToColor(employee);
         });
 
         let createdShapes = []; // Array to store all created shapes
