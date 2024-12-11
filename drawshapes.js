@@ -61,15 +61,17 @@ async function createShapesFromClipboard() {
         }
 
         const startDate = new Date(vacationData[0].vacationStartDate);
-        let occupiedSlots = [];
         let employeeColors = {};
-        let employees = [...new Set(vacationData.map(v => v.employeeName))];
+        let employees = [...new Set(vacationData.map(v => v.employeeName))].sort();
 
         employees.forEach((employee, index) => {
             employeeColors[employee] = stringToColor(employee);
         });
 
         let createdShapes = []; // Array to store all created shapes
+
+        // Sort vacationData by start date
+        vacationData.sort((a, b) => new Date(a.vacationStartDate) - new Date(b.vacationStartDate));
 
         for (const vacation of vacationData) {
             const vacationStart = new Date(vacation.vacationStartDate);
@@ -79,17 +81,7 @@ async function createShapesFromClipboard() {
 
             const width = vacation.vacationDuration * baseWidth + (vacation.vacationDuration - 1) * padding;
 
-            let y = startY;
-            let overlap = true;
-            while (overlap) {
-                overlap = occupiedSlots.some(slot => {
-                    return (x < slot.x + slot.width && x + width > slot.x &&
-                            y < slot.y + baseHeight && y + baseHeight > slot.y);
-                });
-                if (overlap) y += baseHeight + padding;
-            }
-
-            occupiedSlots.push({x, y, width, height: baseHeight});
+            let y = startY + employees.indexOf(vacation.employeeName) * (baseHeight + padding);
 
             const shape = await miro.board.createShape({
                 content: `<p><b>${vacation.employeeName}</b><br />${vacation.vacationPeriod}</p>`,
