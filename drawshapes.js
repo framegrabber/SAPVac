@@ -48,7 +48,9 @@ async function createShapesFromClipboard() {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
         
-            const hue = hash % 360;
+            // Use golden ratio to spread the hues more evenly
+            const goldenRatio = 0.618033988749895;
+            const hue = Math.floor((hash * goldenRatio) % 1 * 360);
             const saturation = 70 + (hash % 10); // 70-80%
             const lightness = 80 + ((hash >> 8) % 10);  // 80-90%
         
