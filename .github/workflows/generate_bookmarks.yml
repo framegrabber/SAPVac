@@ -2,8 +2,7 @@ name: Generate Bookmarks
 
 on:
   push:
-    branches:
-      - main
+
 
 jobs:
   generate-bookmarks:
@@ -59,7 +58,7 @@ jobs:
         body: |
           ## 🔖 New Release
 
-          This release includes the latest version of the Audible List Tools bookmarklets.
+          This release includes the latest version of the Miro Tools bookmarklets.
           
           ### 📦 Assets
           - `bookmarks.html` - Import this file into your browser's bookmarks
