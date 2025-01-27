@@ -12,7 +12,6 @@ async function createStickiesFromInput() {
         const startY = viewport.y + viewport.height / 4;
         const width = 200;
         const padding = 10;
-        let createdStickies = [];
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
@@ -29,13 +28,10 @@ async function createStickiesFromInput() {
                         textAlignVertical: 'middle',
                     },
                 });
-                createdStickies.push(sticky);
             }
         }
 
         console.log('Sticky notes successfully created');
-        await miro.board.group({ items: createdStickies });
-        console.log('Sticky notes successfully grouped');
     } catch (error) {
         console.error('Error creating sticky notes:', error);
     }
