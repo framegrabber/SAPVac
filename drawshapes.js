@@ -31,7 +31,7 @@ async function createShapesFromClipboard() {
             let end = new Date(endDate);
             let count = 0;
             const curDate = new Date(start);
-            while (curDate < end) { // change from <= to <
+            while (curDate <= end) { // change from <= to <
                 const dayOfWeek = curDate.getDay();
                 if (dayOfWeek !== 0 && dayOfWeek !== 6) count++;
                 curDate.setDate(curDate.getDate() + 1);
